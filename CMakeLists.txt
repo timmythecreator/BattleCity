@@ -11,4 +11,8 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE) # turning off glfw installation
 
 add_subdirectory(external/glfw)
-target_link_libraries(${PROJECT_NAME} glfw) # linking glfw to our project
+add_subdirectory(external/glad)
+
+# linking libraries to our project
+target_link_libraries(${PROJECT_NAME} glfw) 
+target_link_libraries(${PROJECT_NAME} glad)
