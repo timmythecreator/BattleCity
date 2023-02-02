@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "Renderer/ShaderProgram.h"
+
 GLfloat points[] = {
     /* x     y     z*/
      0.0f,  0.5f, 0.0f,
@@ -94,25 +96,14 @@ int main( void )
 
     glClearColor( 1, 1, 0, 1 );
 
-    // compiling vertex shader
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vs, 1, &vertex_shader, nullptr);
-    glCompileShader(vs);
-
-    // compiling fragment shader
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
-
-    // linking vertex shader and fragment shader
-    GLuint shader_program = glCreateProgram();
-    glAttachShader(shader_program, vs);
-    glAttachShader(shader_program, fs);
-    glLinkProgram(shader_program);
-
-    // so, after linking we don't need in vertex and fragment shader objects. That's why we delete them via method below
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    std::string vertexShader(vertex_shader);
+    std::string fragmentShader(fragment_shader);
+    Renderer::ShaderProgram shaderProgram(vertexShader, fragmentShader);
+    if (!shaderProgram.isCompiled())
+    {
+        std::cerr << "Couldn't create shader program!" << std::endl;
+        return -1;
+    }
 
     GLuint points_vbo = 0;
     glGenBuffers(1, &points_vbo);
@@ -143,7 +134,7 @@ int main( void )
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Process of drawing an object
-        glUseProgram(shader_program);
+        shaderProgram.use();
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0 /* from where */, 3 /* the number of vertexes*/);
 
