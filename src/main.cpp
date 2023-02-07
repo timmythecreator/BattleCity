@@ -87,6 +87,8 @@ int main(int argc, char** argv)
             return -1;
         }
 
+        resourceManager.loadTexture("Default", "/res/textures/map_16x16.png");
+
         GLuint points_vbo = 0;
         glGenBuffers(1, &points_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
